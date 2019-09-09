@@ -26,7 +26,6 @@ lazy val root = (project in file("."))
 val sparkVersion     = "2.2.0.cloudera1"
 val scalaTestVersion = "3.0.4"
 val kuduVersion      = "1.9.0"
-//val osArch = osDetectorClassifier.result.
 
 parallelExecution in Test := false
 val scalaV = "2.11.8"
