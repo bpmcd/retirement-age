@@ -51,7 +51,7 @@ class KuduStorageTest extends FunSuite with SparkTestBase with BeforeAndAfter {
     factTable = DatedTable(factTableName, "kudu", "date", 1, None, None, Some(List(dimTable)))
     database = Database("impala::default", Seq(factTable))
 
-    insertKuduData(factTable, TestObjects.smallDatasetSeconds, KuduObjects.defaultFactSchema)
+    insertKuduData(factTable, KuduObjects.defaultFactData, KuduObjects.defaultFactSchema)
 
     insertKuduData(dimTable, KuduObjects.defaultDimData, KuduObjects.defaultDimSchema)
 
