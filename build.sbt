@@ -16,7 +16,7 @@ lazy val root = (project in file("."))
     resolvers += "Cloudera" at "https://repository.cloudera.com/artifactory/cloudera-repos",
     libraryDependencies ++= sparkDependencies ++ otherDependencies ++
       Seq(
-        "org.apache.kudu" % "kudu-binary" % kuduVersion % "test" classifier osDetectorClassifier.value),
+        "org.apache.kudu" % "kudu-binary" % kuduVersion % "it, test" classifier osDetectorClassifier.value),
     test in assembly := {},
     scalafmtOnCompile := true,
     scalafmtTestOnCompile := true,
@@ -41,10 +41,10 @@ val otherDependencies = Seq(
   "net.jcazevedo"              %% "moultingyaml"    % "0.4.0",
   "com.google.guava"           % "guava"            % "21.0",
   "com.typesafe.scala-logging" %% "scala-logging"   % "3.7.2",
-  "org.scalatest"              %% "scalatest"       % scalaTestVersion % "test",
+  "org.scalatest"              %% "scalatest"       % scalaTestVersion % "it, test",
   "com.databricks"             %% "spark-avro"      % "4.0.0",
   "org.apache.kudu"            %% "kudu-spark2"     % kuduVersion,
-  "org.apache.kudu"            % "kudu-test-utils"  % kuduVersion % "test",
+  "org.apache.kudu"            % "kudu-test-utils"  % kuduVersion % "it, test",
   "org.slf4j"                  % "log4j-over-slf4j" % "1.7.26",
   "ch.qos.logback"             % "logback-classic"  % "1.2.3"
 ).map(
