@@ -30,7 +30,7 @@ object KuduObjects {
       StructField("dim_date", LongType, nullable = false) ::
       Nil)
 
-  val defaultSubKey: Seq[String] = Seq("sub_id")
+  val defaultSubKey: Seq[String] = Seq("sub_id", "id")
 
   val defaultSubData = List(List("10", "1", TestObjects.today.getMillis / 1000),
                             List("20", "2", TestObjects.today.minusYears(1).getMillis / 1000),
