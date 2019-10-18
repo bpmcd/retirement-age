@@ -1,6 +1,7 @@
 /* Copyright (c) 2018 phData inc. */
 
 import sbt._
+val hadoop_home = System.getenv("HADOOP_HOME")
 
 lazy val IntTest = config("intTest") extend (Test)
 lazy val root = (project in file("."))
@@ -20,7 +21,8 @@ lazy val root = (project in file("."))
     test in assembly := {},
     scalafmtOnCompile := true,
     scalafmtTestOnCompile := true,
-    scalafmtVersion := "1.2.0"
+    scalafmtVersion := "1.2.0",
+    javaOptions += s"-Djava.library.path=$hadoop_home\\bin"
   )
 
 val sparkVersion     = "2.2.0.cloudera1"
@@ -34,8 +36,11 @@ val sparkDependencies = Seq(
   "org.apache.spark" %% "spark-sql"  % sparkVersion % "provided",
   "org.apache.spark" %% "spark-hive" % sparkVersion % "provided"
 ).map(
-  _.excludeAll(ExclusionRule(organization = "org.glassfish.jersey.core", name = "jersey-client"),
-               ExclusionRule(organization = "log4j")))
+  _.excludeAll(
+    ExclusionRule(organization = "org.glassfish.jersey.core", name = "jersey-client"),
+    ExclusionRule(organization = "log4j"),
+    ExclusionRule(organization = "org.slf4j", name = "slf4j-log4j12")
+  ))
 val otherDependencies = Seq(
   "org.rogach"                 %% "scallop"         % "3.1.1",
   "net.jcazevedo"              %% "moultingyaml"    % "0.4.0",
