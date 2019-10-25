@@ -1,28 +1,33 @@
 /* Copyright (c) 2018 phData inc. */
 
 import sbt._
-val hadoop_home = System.getenv("HADOOP_HOME")
 
-lazy val IntTest = config("intTest") extend (Test)
+ThisBuild / organization := "io.phdata"
+ThisBuild / scalaVersion := scalaV
+ThisBuild / version := "0.1-SNAPSHOT"
+
+lazy val IntTest = config("it") extend (Test)
+
+def itFilter(name: String): Boolean   = name endsWith "ITest"
+def unitFilter(name: String): Boolean = (name endsWith "Test") && !itFilter(name)
+
 lazy val root = (project in file("."))
   .configs(IntTest)
   .enablePlugins(OsDetectorPlugin)
-  .settings(Defaults.itSettings: _*)
   .settings(
+    inConfig(IntTest)(Defaults.testTasks),
     name := "retirement-age",
-    version := "0.1-SNAPSHOT",
-    organization := "io.phdata",
-    scalaVersion := scalaV,
     dependencyOverrides += "com.fasterxml.jackson.core" % "jackson-core" % "2.8.0",
     resolvers += "Cloudera" at "https://repository.cloudera.com/artifactory/cloudera-repos",
     libraryDependencies ++= sparkDependencies ++ otherDependencies ++
       Seq(
-        "org.apache.kudu" % "kudu-binary" % kuduVersion % "intTest" classifier osDetectorClassifier.value),
+        "org.apache.kudu" % "kudu-binary" % kuduVersion % "it,test" classifier osDetectorClassifier.value),
     test in assembly := {},
+    testOptions in Test := Seq(Tests.Filter(unitFilter)),
+    testOptions in IntTest := Seq(Tests.Filter(itFilter)),
     scalafmtOnCompile := true,
     scalafmtTestOnCompile := true,
-    scalafmtVersion := "1.2.0",
-    javaOptions += s"-Djava.library.path=$hadoop_home\\bin"
+    scalafmtVersion := "1.2.0"
   )
 
 val sparkVersion     = "2.2.0.cloudera1"
@@ -46,10 +51,10 @@ val otherDependencies = Seq(
   "net.jcazevedo"              %% "moultingyaml"    % "0.4.0",
   "com.google.guava"           % "guava"            % "21.0",
   "com.typesafe.scala-logging" %% "scala-logging"   % "3.7.2",
-  "org.scalatest"              %% "scalatest"       % scalaTestVersion % "test",
+  "org.scalatest"              %% "scalatest"       % scalaTestVersion % "it,test",
   "com.databricks"             %% "spark-avro"      % "4.0.0",
   "org.apache.kudu"            %% "kudu-spark2"     % kuduVersion,
-  "org.apache.kudu"            % "kudu-test-utils"  % kuduVersion % "intTest",
+  "org.apache.kudu"            % "kudu-test-utils"  % kuduVersion % "it,test",
   "org.slf4j"                  % "log4j-over-slf4j" % "1.7.26",
   "ch.qos.logback"             % "logback-classic"  % "1.2.3"
 ).map(
